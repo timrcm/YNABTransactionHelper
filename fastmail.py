@@ -36,7 +36,7 @@ class Fastmail:
         print(response.text)
         return response.json()
 
-    def get_mail(self):
+    def get_mail_body_ids(self):
         data = {
             'using': ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'],
             'methodCalls': [
@@ -84,7 +84,15 @@ class Fastmail:
         response = requests.post(url=f'{self.endpoint}/api',
                                  headers=self.headers,
                                  data=json.dumps(data))
-        print(response.text)
+        # print(response.text)
         # print(response.json()['methodResponses'][3][1]['list'][0]['htmlBody'][0]['blobId'])
         blob_ids = [mail['htmlBody'][0]['blobId'] for mail in response.json()['methodResponses'][3][1]['list']]
-        print(blob_ids)
+        return blob_ids
+
+    def get_mail(self, blob_ids):
+        for blob in blob_ids:
+            endpoint = f'https://www.fastmailusercontent.com/jmap/download/{self.account_id}/{blob}/{blob}.html?type=text/html'
+            response = requests.get(url=endpoint,
+                                    headers=self.headers)
+            with open(f'{blob}.html', 'w') as f:
+                f.write(response.text)
