@@ -10,5 +10,6 @@ if __name__ == '__main__':
     # with open('ynab.json', 'w') as f:
     #     f.write(json.dumps(ynab.get_budgets(), indent=2))
 
-    with open('mail.json', 'w') as f:
-        f.write(json.dumps(fastmail.get_mail(), indent=2))
+    fastmail.get_mail()
+    # with open('mail.json', 'w') as f:
+    #     f.write(json.dumps(fastmail.test_request(), indent=2))
