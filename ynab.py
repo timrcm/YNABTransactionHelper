@@ -9,8 +9,28 @@ class YNAB:
         self.headers = {
             'Authorization': f'Bearer {self.token}'
         }
+        self.budget_id = self.get_budget_id()
 
-    def get_budgets(self):
+    def get_budget_id(self):
         response = requests.get(url=self.endpoint,
                                 headers=self.headers)
-        return response.json()
+        return response.json()['data']['budgets'][0]['id']
+
+    def create_transaction(self):
+        data = {
+            'transaction': {
+                'account_id': None,
+                'date': None,
+                'amount': None,
+                'payee_id': None,
+                'payee_name': None,
+                'category_id': None,
+                'memo': None,
+                'cleared': None,
+                'approved': None,
+                'flag_color': None,
+                'import_id': None
+            }
+        }
+        response = requests.post(url=f'{self.endpoint}/{self.budget_id}/transactions', headers=self.headers, data=data)
+        print(response.json())
